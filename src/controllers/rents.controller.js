@@ -1,11 +1,13 @@
-export async function getRents() {
+import connection from "../database/db.js"
+
+export async function getRents(req, res) {
 }
 
-export async function postRent() {
+export async function postRent(req, res) {
 }
 
-export async function endRent() {
+export async function endRent(req, res) {
 }
 
-export async function deleteRent() {
+export async function deleteRent(req, res) {
 }
