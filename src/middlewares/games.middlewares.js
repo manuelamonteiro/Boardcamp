@@ -14,13 +14,13 @@ export async function gameValidation(req, res, next) {
     };
 
     try {
-        const isCategoryExists = await connectionDB.query(`SELECT * FROM categories WHERE id=$1`, [categoryId]);
+        const isCategoryExists = await connectionDB.query(`SELECT * FROM categories WHERE id=$1;`, [categoryId]);
 
         if(isCategoryExists.rows.length === 0){
             return res.sendStatus(400);
         }
 
-        const isNameExists = await connectionDB.query(`SELECT * FROM games WHERE name=$1`, [name]);
+        const isNameExists = await connectionDB.query(`SELECT * FROM games WHERE name=$1;`, [name]);
 
         if (isNameExists.rows.length !== 0) {
             return res.sendStatus(409);

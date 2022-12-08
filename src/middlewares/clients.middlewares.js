@@ -14,7 +14,7 @@ export async function clientValidation(req, res, next) {
     };
 
     try {
-        const isCpfExists = await connectionDB.query(`SELECT * FROM customers WHERE cpf=$1`, [cpf]);
+        const isCpfExists = await connectionDB.query(`SELECT * FROM customers WHERE cpf=$1;`, [cpf]);
 
         if (isCpfExists.rows.length !== 0) {
             return res.sendStatus(409);
@@ -31,7 +31,7 @@ export async function isClientExists(req, res, next) {
     const { id } = req.params;
 
     try {
-        const isIdExists = await connectionDB.query(`SELECT * FROM customers WHERE id=$1`, [id]);
+        const isIdExists = await connectionDB.query(`SELECT * FROM customers WHERE id=$1;`, [id]);
 
         if (isIdExists.rows.length === 0) {
             return res.sendStatus(404);

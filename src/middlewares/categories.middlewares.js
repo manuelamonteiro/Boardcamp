@@ -14,7 +14,7 @@ export async function isNameOfCategoryOk(req, res, next) {
     };
 
     try{
-        const isNameExists = await connectionDB.query(`SELECT * FROM categories WHERE name=$1`, [name]);
+        const isNameExists = await connectionDB.query(`SELECT * FROM categories WHERE name=$1;`, [name]);
 
         if(isNameExists.rows.length !== 0){
             return res.sendStatus(409);

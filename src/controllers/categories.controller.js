@@ -16,7 +16,7 @@ export async function postCategory(req, res) {
     const { name } = req.body;
 
     try {
-        const category = await connectionDB.query("INSERT INTO categories (name) VALUES ($1)", [name]);
+        const category = await connectionDB.query("INSERT INTO categories (name) VALUES ($1);", [name]);
         res.sendStatus(201);
     } catch (error) {
         res.status(500).send(error.message);
