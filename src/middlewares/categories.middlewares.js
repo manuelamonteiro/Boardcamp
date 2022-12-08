@@ -9,14 +9,14 @@ export async function isNameOfCategoryOk(req, res, next) {
 
     if (validationStatus.error) {
         const error = validationStatus.error.details.map((detail) => detail.message);
-        res.status(422).send(error);
+        res.status(400).send(error);
         return;
     };
 
     try{
-        const isNameExists = connection.query(`SELECT * FROM categories WHERE name=$1`, [name]);
+        const isNameExists = await connection.query(`SELECT * FROM categories WHERE name=$1`, [name]);
 
-        if(isNameExists.rows){
+        if(isNameExists.rows.length !== 0){
             return res.sendStatus(409);
         }
     } catch (error){

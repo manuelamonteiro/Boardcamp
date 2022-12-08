@@ -26,6 +26,7 @@ export async function postClient(req, res) {
     } catch (error) {
         res.status(500).send(error.message);
     }
+
 }
 
 export async function getClientById(req, res) {
@@ -45,7 +46,6 @@ export async function getClientById(req, res) {
         res.status(500).send(error.message);
     }
 
-
 }
 
 export async function updateClient(req, res) {
@@ -59,4 +59,5 @@ export async function updateClient(req, res) {
     } catch (error) {
         res.status(500).send(error.message);
     }
+    
 }
