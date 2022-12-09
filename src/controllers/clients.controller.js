@@ -4,7 +4,14 @@ export async function getClients(req, res) {
 
     const { cpf } = req.query;
 
-    if (cpf) { }
+    if (cpf) {
+        try {
+            const clientsByCpf = await connectionDB.query(`SELECT * FROM customers WHERE cpf LIKE $1;`, [cpf]);
+            return res.status(200).send(clientsByCpf.rows);
+        } catch (error) {
+            return res.status(500).send(error.message);
+        }
+    }
 
     try {
         const clients = await connectionDB.query("SELECT * FROM customers;");
@@ -59,5 +66,5 @@ export async function updateClient(req, res) {
     } catch (error) {
         res.status(500).send(error.message);
     }
-    
+
 }
