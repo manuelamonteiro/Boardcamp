@@ -37,4 +37,14 @@ export async function endRent(req, res) {
 }
 
 export async function deleteRent(req, res) {
+
+    const id = req.params.id;
+
+    try {
+        const deleteRent = await connectionDB.query("DELETE FROM rentals WHERE id=$1;", [id]);
+        res.status(200);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+
 }
