@@ -34,6 +34,32 @@ export async function postRent(req, res) {
 }
 
 export async function endRent(req, res) {
+
+    const id = req.params.id;
+    const returnDate = dayjs().format("YYYY-M-D");
+    let delayFee;
+
+    try{
+        const rent = await connectionDB.query(`SELECT * FROM rentals WHERE id=$1;`, [id]);
+        const game = await connectionDB.query(`SELECT * FROM games WHERE id=$1;`, [rent.rows[0].gameId]);
+
+        const numberDaysRented = (Date.now() - rent.rows[0].rentDate)/(1000 * 60 * 60 * 24);
+        if(numberDaysRented <= rent.rows[0].daysRented){ 
+            delayFee = 0;
+        }       
+        else {
+            delayFee = (Math.floor(numberDaysRented) - parseInt(rent.rows[0].daysRented)) * game.rows[0].pricePerDay;
+        }
+
+        const rentUpdate = await connectionDB.query(`UPDATE rentals SET "returnDate"=$1, "delayFee" =$2  WHERE id=$3;`, [returnDate, delayFee, id]);
+
+        const newStock = Number(game.rows[0].stockTotal) + 1;
+        const updateStock = await connectionDB.query(`UPDATE games SET "stockTotal"=$1 WHERE id=$2;`, [newStock, game.rows[0].id]);
+
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 }
 
 export async function deleteRent(req, res) {

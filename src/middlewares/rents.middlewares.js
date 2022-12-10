@@ -54,6 +54,8 @@ export async function deleteRentValidation(req, res, next) {
     } catch (error) {
         res.status(500).send(error.message);
     }
+
+    next();
 }
 
 export async function endRentValidation(req, res, next) {
@@ -73,4 +75,6 @@ export async function endRentValidation(req, res, next) {
     } catch (error) {
         res.status(500).send(error.message);
     }
+
+    next();
 }
