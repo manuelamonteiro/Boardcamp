@@ -39,4 +39,6 @@ export async function isClientExists(req, res, next) {
     } catch (error) {
         res.status(500).send(error.message);
     }
+
+    next();
 }

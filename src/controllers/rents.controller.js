@@ -3,6 +3,9 @@ import dayjs from "dayjs";
 
 export async function getRents(req, res) {
 
+    const customerId = req.query;
+    const gameId = req.query;
+
     try {
         const rentals = await connectionDB.query("SELECT * FROM rentals;");
         res.status(200).send(rentals.rows);
