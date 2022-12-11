@@ -8,7 +8,7 @@ export async function getGames(req, res) {
         const nameLower = name.toLowerCase();
 
         try{
-            const gamesByName = await connectionDB.query(`SELECT * FROM games WHERE LOWER (name) LIKE $1;`, [nameLower]);
+            const gamesByName = await connectionDB.query(`SELECT * FROM games WHERE LOWER (name) LIKE $1;`, [nameLower + "%"]);
             return res.status(200).send(gamesByName.rows);
         } catch (error){
             return res.status(500).send(error.message);
