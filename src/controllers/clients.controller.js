@@ -9,7 +9,7 @@ export async function getClients(req, res) {
             const clientsByCpf = await connectionDB.query(`SELECT * FROM customers WHERE cpf LIKE $1;`, [cpf + "%"]);
             return res.status(200).send(clientsByCpf.rows);
         } catch (error) {
-            return res.status(500).send(error.message);
+            return res.status(500).send({message: error.message});
         }
     }
 
@@ -17,7 +17,7 @@ export async function getClients(req, res) {
         const clients = await connectionDB.query("SELECT * FROM customers;");
         res.status(200).send(clients.rows);
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).send({message: error.message});
     }
 
 }
@@ -29,9 +29,9 @@ export async function postClient(req, res) {
     try {
         const client = await connectionDB.query("INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4);",
             [name, phone, cpf, birthday]);
-        res.sendStatus(201);
+            res.status(201).send({message: "Cliente adicionado com sucesso!"});
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).send({message: error.message});
     }
 
 }
@@ -50,7 +50,7 @@ export async function getClientById(req, res) {
 
         res.status(200).send(clientById.rows[0]);
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).send({message: error.message});
     }
 
 }
@@ -62,9 +62,9 @@ export async function updateClient(req, res) {
 
     try {
         const clientUpdate = await connectionDB.query(`UPDATE customers SET name=$1, phone=$2, cpf=$3, birthday=$4 WHERE id=$5;`, [name, phone, cpf, birthday, id]);
-        res.sendStatus(200);
+        res.status(200).send({message: "Cliente atualizado com sucesso!"});
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).send({message: error.message});
     }
 
 }

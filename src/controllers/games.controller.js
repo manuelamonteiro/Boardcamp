@@ -11,7 +11,7 @@ export async function getGames(req, res) {
             const gamesByName = await connectionDB.query(`SELECT * FROM games WHERE LOWER (name) LIKE $1;`, [nameLower + "%"]);
             return res.status(200).send(gamesByName.rows);
         } catch (error){
-            return res.status(500).send(error.message);
+            return res.status(500).send({message: error.message});
         }
     }
 
@@ -19,7 +19,7 @@ export async function getGames(req, res) {
         const games = await connectionDB.query("SELECT * FROM games;");
         res.status(200).send(games.rows);
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).send({message: error.message});
     }
 
 }
@@ -31,10 +31,10 @@ export async function postGame(req, res) {
     try {
         const game = await connectionDB.query(`INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1, $2, $3, $4, $5);`,
             [name, image, stockTotal, categoryId, pricePerDay]);
-        res.sendStatus(201);
+            res.status(201).send({message: "Jogo adicionado com sucesso!"});
     } catch (error) {
         console.log(error)
-        res.status(500).send(error.message);
+        res.status(500).send({message: error.message});
     }
 
 }
