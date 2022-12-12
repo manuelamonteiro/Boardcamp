@@ -3,11 +3,28 @@ import dayjs from "dayjs";
 
 export async function getRents(req, res) {
 
-    const customerId = req.query;
-    const gameId = req.query;
+    const {customerId, gameId} = req.query;
+
+    if (customerId) {
+        try {
+            const rentals = await connectionDB.query(`SELECT rentals.*, JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer, JSON_BUILD_OBJECT('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game FROM rentals JOIN customers ON rentals."customerId" = customers.id JOIN games ON rentals."gameId" = games.id JOIN categories ON games."categoryId" = categories.id WHERE rentals."customerId"=$1`, [customerId]);
+            return res.status(200).send(rentals.rows);
+        } catch (error) {
+            return res.status(500).send(error.message);
+        }
+    }
+
+    if (gameId) {
+        try {
+            const rentals = await connectionDB.query(`SELECT rentals.*, JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer, JSON_BUILD_OBJECT('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game FROM rentals JOIN customers ON rentals."customerId" = customers.id JOIN games ON rentals."gameId" = games.id JOIN categories ON games."categoryId" = categories.id WHERE rentals."gameId"=$1`, [gameId]);
+            return res.status(200).send(rentals.rows);
+        } catch (error) {
+            return res.status(500).send(error.message);
+        }
+    }
 
     try {
-        const rentals = await connectionDB.query("SELECT * FROM rentals;");
+        const rentals = await connectionDB.query(`SELECT rentals.*, JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer, JSON_BUILD_OBJECT('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game FROM rentals JOIN customers ON rentals."customerId" = customers.id JOIN games ON rentals."gameId" = games.id JOIN categories ON games."categoryId" = categories.id`);
         res.status(200).send(rentals.rows);
     } catch (error) {
         res.status(500).send(error.message);
@@ -42,14 +59,14 @@ export async function endRent(req, res) {
     const returnDate = dayjs().format("YYYY-M-D");
     let delayFee;
 
-    try{
+    try {
         const rent = await connectionDB.query(`SELECT * FROM rentals WHERE id=$1;`, [id]);
         const game = await connectionDB.query(`SELECT * FROM games WHERE id=$1;`, [rent.rows[0].gameId]);
 
-        const numberDaysRented = (Date.now() - rent.rows[0].rentDate)/(1000 * 60 * 60 * 24);
-        if(numberDaysRented <= rent.rows[0].daysRented){ 
+        const numberDaysRented = (Date.now() - rent.rows[0].rentDate) / (1000 * 60 * 60 * 24);
+        if (numberDaysRented <= rent.rows[0].daysRented) {
             delayFee = 0;
-        }       
+        }
         else {
             delayFee = (Math.floor(numberDaysRented) - parseInt(rent.rows[0].daysRented)) * game.rows[0].pricePerDay;
         }
