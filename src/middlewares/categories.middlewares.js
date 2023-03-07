@@ -13,13 +13,13 @@ export async function isNameOfCategoryOk(req, res, next) {
         return;
     };
 
-    try{
+    try {
         const isNameExists = await connectionDB.query(`SELECT * FROM categories WHERE name=$1;`, [name]);
 
-        if(isNameExists.rows.length !== 0){
+        if (isNameExists.rows.length !== 0) {
             return res.sendStatus(409);
         }
-    } catch (error){
+    } catch (error) {
         res.status(500).send(error.message);
     }
 

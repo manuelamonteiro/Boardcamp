@@ -44,11 +44,11 @@ export async function deleteRentValidation(req, res, next) {
     try {
         const isRentExists = await connectionDB.query(`SELECT * FROM rentals WHERE id=$1;`, [id]);
 
-        if(isRentExists.rows.length === 0){
+        if (isRentExists.rows.length === 0) {
             return res.sendStatus(404);
         }
 
-        if(isRentExists.rows[0].returnDate === null){
+        if (isRentExists.rows[0].returnDate === null) {
             return res.sendStatus(400);
         }
     } catch (error) {
@@ -65,11 +65,11 @@ export async function endRentValidation(req, res, next) {
     try {
         const isRentExists = await connectionDB.query(`SELECT * FROM rentals WHERE id=$1;`, [id]);
 
-        if(isRentExists.rows.length === 0){
+        if (isRentExists.rows.length === 0) {
             return res.sendStatus(404);
         }
 
-        if(isRentExists.rows[0].returnDate !== null){
+        if (isRentExists.rows[0].returnDate !== null) {
             return res.sendStatus(400);
         }
     } catch (error) {

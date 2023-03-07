@@ -6,7 +6,6 @@ import clientsRouter from "./routers/clients.routers.js";
 import rentsRouter from "./routers/rents.routers.js";
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
